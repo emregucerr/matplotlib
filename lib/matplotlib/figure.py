@@ -60,6 +60,7 @@ from matplotlib.patches import Rectangle
 from matplotlib.text import Text
 from matplotlib.transforms import (Affine2D, Bbox, BboxTransformTo,
                                    TransformedBbox)
+from distutils.version import LooseVersion
 
 _log = logging.getLogger(__name__)
 
@@ -3495,6 +3496,12 @@ None}, default: None
         return None if event is None else event.name == "key_press_event"
 
     def tight_layout(self, *, pad=1.08, h_pad=None, w_pad=None, rect=None):
+        from .tight_layout import get_tight_layout_figure
+        if mpl.__version__ < '3.1':
+            pad = 1.08
+            h_pad = None
+            w_pad = None
+            rect = None
         """
         Adjust the padding between and around subplots.
 
