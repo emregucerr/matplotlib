@@ -1389,7 +1389,10 @@ class OffsetFrom:
             The screen units to use (pixels or points) for the offset input.
         """
         self._artist = artist
-        self._ref_coord = ref_coord
+        if isinstance(ref_coord, np.ndarray):
+            self._ref_coord = np.array(ref_coord, copy=True)
+        else:
+            self._ref_coord = ref_coord
         self.set_unit(unit)
 
     def set_unit(self, unit):
@@ -1456,7 +1459,7 @@ class _AnnotationBase:
                  xycoords='data',
                  annotation_clip=None):
 
-        self.xy = xy
+        self.xy = np.array(xy, copy=True)
         self.xycoords = xycoords
         self.set_annotation_clip(annotation_clip)
 
