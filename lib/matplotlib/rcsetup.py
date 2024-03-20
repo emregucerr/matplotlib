@@ -438,17 +438,44 @@ def validate_ps_distiller(s):
         return ValidateInStrings('ps.usedistiller', ['ghostscript', 'xpdf'])(s)
 
 
+@_api.deprecated("3.7", alternative="use 'savefig.papertype' instead")
 def _validate_papersize(s):
-    # Re-inline this validator when the 'auto' deprecation expires.
     s = ValidateInStrings("ps.papersize",
-                          ["auto", "letter", "legal", "ledger",
+                          ["letter", "legal", "ledger",
                            *[f"{ab}{i}" for ab in "ab" for i in range(11)]],
                           ignorecase=True)(s)
-    if s == "auto":
-        _api.warn_deprecated("3.8", name="ps.papersize='auto'",
-                             addendum="Pass an explicit paper type, or omit the "
-                             "*ps.papersize* rcParam entirely.")
     return s
+
+def _validate_savefig_papertype(s):
+    """
+    Validate the 'savefig.papertype' rcParam.
+
+    Parameters
+    ----------
+    s : str
+        The name of the paper type to validate.
+
+    Returns
+    -------
+    str
+        The validated paper type.
+
+    Raises
+    ------
+    ValueError
+        If the paper type is not recognized.
+
+    Notes
+    -----
+    This function checks if the provided paper type is one of the valid
+    paper types. The valid paper types include "letter", "legal", "executive",
+    "ledger", and "a0" through "a10", "b0" through "b10". The list of valid
+    paper types can be extended as needed for new paper types.
+    """
+    valid_papertypes = ["letter", "legal", "executive", "ledger"] + \
+                       [f"a{i}" for i in range(11)] + \
+                       [f"b{i}" for i in range(11)]
+    return ValidateInStrings("savefig.papertype", valid_papertypes, ignorecase=True)(s)
 
 
 # A validator dedicated to the named line styles, based on the items in
@@ -1310,6 +1337,7 @@ _validators = {
 
     # Animation settings
     "animation.html":         ["html5", "jshtml", "none"],
+    "savefig.papertype":      _validate_savefig_papertype,
     # Limit, in MB, of size of base64 encoded animation in HTML
     # (i.e. IPython notebook)
     "animation.embed_limit":  validate_float,
@@ -1341,6 +1369,7 @@ _hardcoded_defaults = {  # Defaults not inferred from
     # ... because they are deprecated:
     # No current deprecations.
     # backend is handled separately when constructing rcParamsDefault.
+    "savefig.papertype": "letter",
 }
 _validators = {k: _convert_validator_spec(k, conv)
                for k, conv in _validators.items()}
