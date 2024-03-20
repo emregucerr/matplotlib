@@ -704,6 +704,21 @@ layers : array
 
 @_docstring.dedent_interpd
 class ContourSet(ContourLabeler, mcoll.Collection):
+
+    def set_paths(self, paths):
+        """
+        Set the paths for this ContourSet.
+
+        Parameters
+        ----------
+        paths : list
+            A list of Path objects.
+        """
+        # Assign the list of paths to self._paths
+        self._paths = paths
+        # Since we have updated the paths, we need to invalidate some
+        # of the existing caches that may hold outdated information.
+        self.changed()
     """
     Store a set of contour lines or filled regions.
 
