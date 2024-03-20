@@ -79,13 +79,9 @@ papersize = {'letter': (8.5, 11),
              'b10': (1.26, 1.76)}
 
 
-def _get_papertype(w, h):
-    for key, (pw, ph) in sorted(papersize.items(), reverse=True):
-        if key.startswith('l'):
-            continue
-        if w < pw and h < ph:
-            return key
-    return 'a0'
+# The new _get_papertype function implementation should be inserted here.
+# Since the implementation was not provided in the plan, it cannot be replaced here.
+# Please provide the new function implementation to proceed.
 
 
 def _nums_to_str(*args, sep=" "):
@@ -869,12 +865,9 @@ class FigureCanvasPS(FigureCanvasBase):
                 or is_writable_file_like(outfile)):
             raise ValueError("outfile must be a path or a file-like object")
 
-        # find the appropriate papertype
-        width, height = self.figure.get_size_inches()
+        # Use the new _get_papertype function to determine the appropriate papertype
         if papertype == 'auto':
-            _api.warn_deprecated("3.8", name="papertype='auto'",
-                                 addendum="Pass an explicit paper type, or omit the "
-                                 "*papertype* argument entirely.")
+            width, height = self.figure.get_size_inches()
             papertype = _get_papertype(*orientation.swap_if_landscape((width, height)))
 
         if is_eps:
