@@ -1,9 +1,11 @@
 import codecs
 import datetime
 import functools
+import warnings
 from io import BytesIO
 import logging
 import math
+from matplotlib._api.deprecation import MatplotlibDeprecationWarning
 import os
 import pathlib
 import shutil
@@ -883,7 +885,12 @@ class PdfPages:
         '_metadata',
     )
 
-    def __init__(self, filename, *, keep_empty=True, metadata=None):
+    def __init__(self, filename, *, keep_empty=False, metadata=None):
+        if keep_empty:
+            warnings.warn(
+                "The 'keep_empty' parameter is deprecated since 3.4 and will "
+                "be removed in 3.6. Use 'keep_empty=False' instead.",
+                MatplotlibDeprecationWarning)
         """
         Create a new PdfPages object.
 
