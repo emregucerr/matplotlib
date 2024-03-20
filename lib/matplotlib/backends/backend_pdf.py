@@ -26,6 +26,8 @@ import numpy as np
 from PIL import Image
 
 import matplotlib as mpl
+import warnings
+from mpl._api.deprecation import MatplotlibDeprecationWarning
 from matplotlib import _api, _text_helpers, _type1font, cbook, dviread
 from matplotlib._pylab_helpers import Gcf
 from matplotlib.backend_bases import (
@@ -2671,7 +2673,7 @@ class PdfPages:
     """
     __slots__ = ('_file', 'keep_empty')
 
-    def __init__(self, filename, keep_empty=True, metadata=None):
+    def __init__(self, filename, keep_empty=False, metadata=None):
         """
         Create a new PdfPages object.
 
@@ -2696,6 +2698,14 @@ class PdfPages:
             'Trapped'. Values have been predefined for 'Creator', 'Producer'
             and 'CreationDate'. They can be removed by setting them to `None`.
         """
+        if keep_empty:
+            warnings.warn(
+                "The behavior of 'keep_empty=True' is deprecated and will change "
+                "in a future version. In the future, PdfPages will always be written "
+                "to disk if 'keep_empty=False'. To suppress this warning, do not set "
+                "'keep_empty' or set it to 'False'.",
+                MatplotlibDeprecationWarning
+            )
         self._file = PdfFile(filename, metadata=metadata)
         self.keep_empty = keep_empty
 
@@ -2704,6 +2714,12 @@ class PdfPages:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
+
+    def __del__(self):
+        try:
+            self.close()
+        except Exception:
+            pass  # Suppress all exceptions for now
 
     def close(self):
         """

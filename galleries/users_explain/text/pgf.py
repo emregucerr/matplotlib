@@ -73,6 +73,14 @@ Multi-Page PDF Files
 The pgf backend also supports multipage pdf files using
 `~.backend_pgf.PdfPages`
 
+.. note::
+   The use of `keep_empty=True` is deprecated and will be removed in a 
+   future Matplotlib release. Currently, it generates an invalid PDF file 
+   if no figures are saved. The default behavior will be changed to 
+   `keep_empty=False`, which does not create a file if no figures are saved.
+   To maintain the current behavior, do not set `keep_empty` or explicitly 
+   set it to 'False'.
+
 .. code-block:: python
 
     from matplotlib.backends.backend_pgf import PdfPages
