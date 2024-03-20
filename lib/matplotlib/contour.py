@@ -1487,6 +1487,24 @@ class QuadContourSet(ContourSet):
     %(contour_set_attributes)s
     """
 
+    @property
+    def antialiased(self):
+        """
+        Return the antialiased value of the first Collection.
+
+        This property reflects whether antialiasing is enabled for the contour
+        set. It accesses the `_antialiaseds` attribute which stores the
+        antialiasing settings for each contour level.
+        """
+        _api.warn_deprecated(
+            "3.6", 
+            removal="3.9", 
+            message="The 'antialiased' attribute of 'QuadContourSet' is "
+                    "deprecated and will be removed in Matplotlib 3.9. "
+                    "Please use the 'antialiaseds' attribute instead."
+        )
+        return self._antialiaseds[0]
+
     def _process_args(self, *args, corner_mask=None, algorithm=None, **kwargs):
         """
         Process args and kwargs.
